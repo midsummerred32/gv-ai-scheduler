@@ -2,6 +2,8 @@
 // @name         Google Voice AI Inspection Scheduler (Ollama + iCal + Telegram + NIIS Sync)
 // @namespace    https://github.com/midsummerred32/gv-ai-scheduler
 // @version      2.0.0
+// @downloadURL  https://raw.githubusercontent.com/midsummerred32/gv-ai-scheduler/refs/heads/main/google_voice_ai_scheduler_userscript.js
+// @updateURL    https://raw.githubusercontent.com/midsummerred32/gv-ai-scheduler/refs/heads/main/google_voice_ai_scheduler_userscript.js
 // @description  Automates inspection scheduling in Google Voice using Ollama, live iCal feeds, Telegram approval, and automatically marks contact/appointment status in the National (NIIS) portal.
 // @author       midsummerred32
 // @match        https://voice.google.com/*
@@ -1423,7 +1425,34 @@ Rules:
                     alert(`Broadcasted "Appointment Scheduled" to National portal.`);
                 }
             }
+        };ftText: 'Manual sync from Google Voice'
+                });
+                alert(`Broadcasted "SMS Sent" to open National portal tabs for ${client.phone}`);
+            } else {
+                const schedTime = prompt('Enter appointment date/time for National portal (e.g., 2026-10-15 09:00):');
+                if (schedTime) {
+                    broadcastToNational({
+                        action: 'APPOINTMENT_SCHEDULED',
+                        phone: client.phone,
+                        clientName: client.name,
+                        scheduledTime: schedTime
+                    });
+                    alert(`Broadcasted "Appointment Scheduled" to National portal.`);
+                }
+            }
         };
+    }
+
+    // Initialize UI after DOM loads
+    const initInterval = setInterval(() => {
+        if (document.body) {
+            injectCopilotWidget();
+            clearInterval(initInterval);
+        }
+    }, 1500);
+
+})();
+                  
     }
 
     // Initialize UI after DOM loads
